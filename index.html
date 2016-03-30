@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<!-- _________________________________________________________-->
+<!--  Framework:    AngularJs                                 -->
+<!--  Author:       Vanessa Torres                            -->
+<!--  Date:         March 30, 2016                            -->
+<!--  Description:  Reddit's Front page posts extraction      -->
+<!-- _________________________________________________________-->
+
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+
+<body>
+    <div ng-app="myApp" id="posts" ng-controller="myCtrl as posts">
+        <li ng-repeat="post in posts.data.children | orderBy:'-data.ups'" track by $index>
+            <p>{{post.data.ups}}</p>
+            <p>{{post.data.title}}</p>
+            <p>{{post.data.url}}</p>
+        </li>
+    </div>
+    <script>
+        var app = angular.module('myApp', []);
+        app.controller('myCtrl', function($scope, $http) {
+            var vm = this;
+            vm.mydata = [];
+
+            $http.get("http:/www.reddit.com/.json")
+                .then(function(response) {
+                    vm.mydata = response.data;
+                    $scope.posts = vm.mydata;
+                    //To display received array (table format in the console)
+                    console.table(vm.mydata);
+                    // 
+                }, function(response) {
+                    $scope.posts = "Something went wrong";
+                });
+        });
+    </script>
+</body>
+
+</html>
